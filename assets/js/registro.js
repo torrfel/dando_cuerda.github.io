@@ -163,9 +163,10 @@ function validateStep3() {
 
 
 // Manejo del menú móvil
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const nav = document.querySelector('nav ul');
+const menuBtn = document.getElementById("menu-btn");
+const menu = document.getElementById("menu");
 
-mobileMenuBtn.addEventListener('click', () => {
-    nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+menuBtn.addEventListener("click", () => {
+  menu.classList.toggle("show");
 });
+
