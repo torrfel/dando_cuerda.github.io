@@ -516,6 +516,7 @@ footer {
 }
 /* --- Responsive --- */
 
+/* Responsive adjustments */
 @media (max-width: 768px) {
     nav ul {
         display: none; /* oculto por defecto */
@@ -540,6 +541,7 @@ footer {
     .mobile-menu-btn {
         display: block;
     }
+    
     
     .hero {
         padding: 80px 0;
