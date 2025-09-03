@@ -127,9 +127,14 @@ header {
     color: var(--accent-color);
 }
 
+nav {
+    position: relative;
+}
+
 nav ul {
     display: flex;
     list-style: none;
+    transition: all 0.3s ease;
 }
 
 nav ul li {
@@ -147,14 +152,43 @@ nav ul li a:hover {
     color: var(--main-color);
 }
 
+/* Botón menú móvil */
 .mobile-menu-btn {
     display: none;
     background: none;
     border: none;
     color: var(--text-color);
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     cursor: pointer;
 }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    nav ul {
+        display: none; /* oculto por defecto */
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: white;
+        width: 200px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    nav ul.show {
+        display: flex; /* se muestra cuando se active con JS */
+    }
+
+    nav ul li {
+        margin: 15px 0;
+    }
+
+    .mobile-menu-btn {
+        display: block;
+    }
+}
+
 
 /* Hero Section */
 .hero {
@@ -480,12 +514,29 @@ footer {
         font-size: 2rem;
     }
 }
+/* --- Responsive --- */
 
 @media (max-width: 768px) {
     nav ul {
-        display: none;
+        display: none; /* oculto por defecto */
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: white;
+        width: 200px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-    
+
+    nav ul.show {
+        display: flex; /* se muestra cuando se active con JS */
+    }
+
+    nav ul li {
+        margin: 15px 0;
+    }
+
     .mobile-menu-btn {
         display: block;
     }
