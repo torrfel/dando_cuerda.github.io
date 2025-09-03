@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dando Cuerda - Registro</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../assets/css/registro.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container header-container">
+            <a href="#" class="logo">Dando <span>Cuerda</span></a>
+            
+            <nav>
+                <ul>
+                    <li><a href="home.html#inicio">Inicio</a></li>
+                    <li><a href="home.html#servicios">Servicios</a></li>
+                    <li><a href="home.html#metodologia">Metodología</a></li>
+                    <li><a href="home.html#cotiza">Cotiza</a></li>
+                    <li><a href="home.html#contacto">Contacto</a></li>
+                    <li><a href="login.html">Ingresar</a></li>
+                </ul>
+            </nav>
+            
+            <button class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+
+    <!-- Register Container -->
+    <div class="register-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="card card-register">
+                        <div class="row g-0">
+                            <!-- Left side with branding -->
+                            <div class="col-lg-5 register-left">
+                                <img src="https://dandocuerda.com/Imagenes/logoletras.png" alt="Dando Cuerda" class="logo-large">
+                                <h2 class="welcome-text">Únete a nosotros</h2>
+                                <p class="slogan">Comienza a disfrutar de nuestros servicios de envío</p>
+                                <div class="mt-4">
+                                    <p><i class="fas fa-check-circle me-2"></i>Envíos rápidos y seguros</p>
+                                    <p><i class="fas fa-check-circle me-2"></i>Seguimiento en tiempo real</p>
+                                    <p><i class="fas fa-check-circle me-2"></i>Atención personalizada</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Right side with register form -->
+                            <div class="col-lg-7 register-right">
+                                <h3 class="form-title">Crear Cuenta</h3>
+                                <p class="form-subtitle">Completa tus datos para registrarte</p>
+                                
+                                <!-- Progress indicator -->
+                                <div class="step-indicator">
+                                    <div class="step active" id="step1-indicator">
+                                        <div class="step-number">1</div>
+                                        <div class="step-text">Información Personal</div>
+                                    </div>
+                                    <div class="step" id="step2-indicator">
+                                        <div class="step-number">2</div>
+                                        <div class="step-text">Dirección</div>
+                                    </div>
+                                    <div class="step" id="step3-indicator">
+                                        <div class="step-number">3</div>
+                                        <div class="step-text">Credenciales</div>
+                                    </div>
+                                </div>
+                                
+                                <form action="https://dandocuerda.com/registro/procesar_registro.php" method="post" id="registerForm">
+                                    <!-- Step 1: Personal Information -->
+                                    <div class="form-section active" id="step1">
+                                        <div class="mb-3">
+                                            <label for="nombre" class="form-label">Nombre de la persona o empresa *</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">
+                                                    <i class="fas fa-user"></i>
+                                                </span>
+                                                <input type="text" class="form-control form-control-custom" id="nombre" name="nombre" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="tipo_documento" class="form-label">Tipo de documento *</label>
+                                                <select class="form-select form-control-custom" id="tipo_documento" name="tipo_documento" required>
+                                                    <option value="">Seleccionar...</option>
+                                                    <option value="cedula">Cédula de Ciudadanía</option>
+                                                    <option value="nit">NIT</option>
+                                                    <option value="cedula_extranjeria">Cédula de Extranjería</option>
+                                                    <option value="pasaporte">Pasaporte</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="documento" class="form-label">Número de documento *</label>
+                                                <div class="input-group">
+                                                    <span class="input-icon">
+                                                        <i class="fas fa-id-card"></i>
+                                                    </span>
+                                                    <input type="text" class="form-control form-control-custom" id="documento" name="documento" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="telefono" class="form-label">Teléfono *</label>
+                                                <div class="input-group">
+                                                    <span class="input-icon">
+                                                        <i class="fas fa-phone"></i>
+                                                    </span>
+                                                    <input type="tel" class="form-control form-control-custom" id="telefono" name="telefono" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="email" class="form-label">Correo electrónico *</label>
+                                                <div class="input-group">
+                                                    <span class="input-icon">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </span>
+                                                    <input type="email" class="form-control form-control-custom" id="email" name="email" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mt-4">
+                                            <div></div> <!-- Empty div for spacing -->
+                                            <button type="button" class="btn btn-register" onclick="nextStep(2)">Siguiente</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Step 2: Address Information -->
+                                    <div class="form-section" id="step2">
+                                        <div class="mb-3">
+                                            <label for="direccion_facturacion" class="form-label">Dirección de facturación *</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">
+                                                    <i class="fas fa-file-invoice-dollar"></i>
+                                                </span>
+                                                <input type="text" class="form-control form-control-custom" id="direccion_facturacion" name="direccion_facturacion" required>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="direccion" class="form-label">Dirección de envío *</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">
+                                                    <i class="fas fa-truck"></i>
+                                                </span>
+                                                <input type="text" class="form-control form-control-custom" id="direccion" name="direccion" required>
+                                            </div>
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input" type="checkbox" id="misma_direccion">
+                                                <label class="form-check-label" for="misma_direccion">
+                                                    Usar la misma dirección para facturación y envío
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mt-4">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="prevStep(1)">Anterior</button>
+                                            <button type="button" class="btn btn-register" onclick="nextStep(3)">Siguiente</button>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Step 3: Credentials -->
+                                    <div class="form-section" id="step3">
+                                        <div class="mb-3">
+                                            <label for="usuario" class="form-label">Nombre de usuario *</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">
+                                                    <i class="fas fa-user-circle"></i>
+                                                </span>
+                                                <input type="text" class="form-control form-control-custom" id="usuario" name="usuario" required>
+                                            </div>
+                                            <div class="form-text">El nombre de usuario debe tener entre 4 y 20 caracteres.</div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="contrasena" class="form-label">Contraseña *</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                <input type="password" class="form-control form-control-custom" id="contrasena" name="contrasena" required>
+                                            </div>
+                                            <div class="password-strength mt-2">
+                                                <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                                            </div>
+                                            <div class="form-text" id="passwordStrengthText">La contraseña debe tener al menos 8 caracteres, incluir mayúsculas, minúsculas y números.</div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="confirmar_contrasena" class="form-label">Confirmar contraseña *</label>
+                                            <div class="input-group">
+                                                <span class="input-icon">
+                                                    <i class="fas fa-lock"></i>
+                                                </span>
+                                                <input type="password" class="form-control form-control-custom" id="confirmar_contrasena" name="confirmar_contrasena" required>
+                                            </div>
+                                            <div class="form-text" id="passwordMatchText"></div>
+                                        </div>
+                                        
+                                        <div class="form-check mb-4">
+                                            <input class="form-check-input" type="checkbox" id="terminos" required>
+                                            <label class="form-check-label" for="terminos">
+                                                Acepto los <a href="#">términos y condiciones</a> y la <a href="#">política de privacidad</a>
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="d-flex justify-content-between mt-4">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="prevStep(2)">Anterior</button>
+                                            <button type="submit" class="btn btn-register">Crear Cuenta</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <a href="#" class="footer-logo">Dando <span>Cuerda</span></a>
+                    <p>Impulsando tu negocio con entregas a medida para productos congelados, secos y refrigerados.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Enlaces rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#clientes">Clientes</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#metodologia">Metodología</a></li>
+                        <li><a href="#cotiza">Cotiza</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Servicios</h4>
+                    <ul>
+                        <li><a href="#">Productos Congelados</a></li>
+                        <li><a href="#">Productos Secos</a></li>
+                        <li><a href="#">Productos Refrigerados</a></li>
+                        <li><a href="#">Distribución Nacional</a></li>
+                        <li><a href="#">Logística Personalizada</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Contacto</h4>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Av. Logística 123, Ciudad</li>
+                        <li><i class="fas fa-phone"></i> +1 234 567 8900</li>
+                        <li><i class="fas fa-envelope"></i> info@dandocuerda.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Dando Cuerda. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/registro.js" defer></script>
+</body>
+</html>
