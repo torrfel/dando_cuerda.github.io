@@ -26,3 +26,11 @@ const menu = document.getElementById("menu");
 menuBtn.addEventListener("click", () => {
   menu.classList.toggle("show");
 });
+
+// Ocultar menú al hacer clic en un enlace
+const menuLinks = menu.querySelectorAll("a");
+menuLinks.forEach(link => {
+  link.addEventListener("click", () => {
+    menu.classList.remove("show");
+  });
+});
