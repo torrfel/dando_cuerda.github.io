@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Doughnut Chart - Demo</title>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- estilos -->
+  <link rel="stylesheet" href="/assets/css/doughnut.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>Doughnut Chart — Demo sin backend</h1>
+    <p>Datos simulados en el cliente (como un DataFrame de prueba).</p>
+  </header>
+
+  <main class="main">
+    <section class="chart-card">
+      <canvas id="doughnutCanvas" width="400" height="400" aria-label="Doughnut chart"></canvas>
+      <div id="legend" class="legend"></div>
+    </section>
+
+    <section class="controls">
+      <h3>Editar datos (simulados)</h3>
+      <textarea id="dataInput" rows="6"></textarea>
+      <div class="buttons">
+        <button id="updateBtn">Actualizar gráfico</button>
+        <button id="randomBtn">Generar valores aleatorios</button>
+      </div>
+      <p class="hint">Formato JSON de ejemplo: <code>[{"category":"A","value":40}]</code></p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>Abre este archivo directamente o sirve la carpeta con <code>python -m http.server</code>.</small>
+  </footer>
+
+  <script src="/assets/js/doughnut.js"></script>
+</body>
+</html>

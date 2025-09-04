@@ -1,0 +1,51 @@
+body{
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  background: #fff;
+  color: #333;
+}
+
+header{
+  background: #4e8b75;
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chart-container{
+  position: relative;
+  width: 280px;
+  margin: 30px auto;
+}
+
+.center-text{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.detalle{
+  max-width: 400px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+  gap: 10px;
+}
+
+progress{
+  flex: 1;
+  height: 14px;
+  accent-color: #facc15; /* amarillo */
+}
