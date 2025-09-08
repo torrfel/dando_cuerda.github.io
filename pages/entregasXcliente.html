@@ -1,0 +1,443 @@
+g<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Entregas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --success-color: #27ae60;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            margin-top: 20px;
+            border: none;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-color), #5dade2);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        
+        .stats-card {
+            text-align: center;
+            padding: 15px;
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .stats-card i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .stats-card.primary {
+            background: linear-gradient(135deg, var(--primary-color), #5dade2);
+        }
+        
+        .stats-card.success {
+            background: linear-gradient(135deg, var(--success-color), #2ecc71);
+        }
+        
+        .stats-card.warning {
+            background: linear-gradient(135deg, #f39c12, #f1c40f);
+        }
+        
+        .destination-card {
+            transition: transform 0.3s;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .badge-delivered {
+            background-color: var(--success-color);
+        }
+        
+        .filter-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .btn-filter {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-filter:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .destinatario-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-truck-fast me-2"></i>Dashboard de Entregas
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-chart-bar me-1"></i> Reportes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> Configuración</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Filtros -->
+        <div class="filter-section card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-filter me-2"></i>Filtros</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="emprendedorFilter" class="form-label">Filtrar por Emprendedor</label>
+                        <select class="form-select" id="emprendedorFilter">
+                            <option value="all">Todos los emprendedores</option>
+                            <option value="1">Emprendedor 1</option>
+                            <option value="2">Emprendedor 2</option>
+                            <option value="3">Emprendedor 3</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="dateFilter" class="form-label">Filtrar por Fecha</label>
+                        <input type="date" class="form-control" id="dateFilter">
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button class="btn btn-filter w-100" id="applyFilter">
+                            <i class="fas fa-check me-1"></i> Aplicar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="row">
+            <div class="col-md-4">
+                <div class="stats-card primary">
+                    <i class="fas fa-truck"></i>
+                    <h3>128</h3>
+                    <p>Entregas Totales</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card success">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>115</h3>
+                    <p>Entregas Exitosas</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card warning">
+                    <i class="fas fa-clock"></i>
+                    <h3>13</h3>
+                    <p>Pendientes</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico y Destinos -->
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0"><i class="fas fa-chart-line me-2"></i>Entregas por Destino</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="deliveryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0"><i class="fas fa-map-marker-alt me-2"></i>Top Destinos</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Cali
+                                <span class="badge bg-primary rounded-pill">42</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Bogotá
+                                <span class="badge bg-primary rounded-pill">35</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Medellín
+                                <span class="badge bg-primary rounded-pill">28</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Barranquilla
+                                <span class="badge bg-primary rounded-pill">15</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                Cartagena
+                                <span class="badge bg-primary rounded-pill">8</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Destinos y Entregas -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0"><i class="fas fa-list me-2"></i>Entregas por Destino</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row" id="destinationCards">
+                            <!-- Las tarjetas de destino se generarán aquí -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Entregas -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0"><i class="fas fa-table me-2"></i>Detalle de Entregas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Destino</th>
+                                        <th>Destinatario</th>
+                                        <th>Fecha</th>
+                                        <th>Emprendedor</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="deliveryTable">
+                                    <!-- Los datos de la tabla se generarán aquí -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p class="mb-0">Dashboard de Entregas © 2023 - Todos los derechos reservados</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos de ejemplo (simulando la base de datos)
+        const deliveriesData = [
+            { id: 1, destino: "Cali", destinatario: "Juan Pérez", fecha: "2023-09-07", emprendedor: "Emprendedor 1", entregado: true, registro: "#" },
+            { id: 2, destino: "Cali", destinatario: "María García", fecha: "2023-09-07", emprendedor: "Emprendedor 1", entregado: true, registro: "#" },
+            { id: 3, destino: "Cali", destinatario: "Carlos López", fecha: "2023-09-06", emprendedor: "Emprendedor 2", entregado: true, registro: "#" },
+            { id: 4, destino: "Bogotá", destinatario: "Ana Rodríguez", fecha: "2023-09-06", emprendedor: "Emprendedor 1", entregado: true, registro: "#" },
+            { id: 5, destino: "Bogotá", destinatario: "Pedro Martínez", fecha: "2023-09-05", emprendedor: "Emprendedor 3", entregado: true, registro: "#" },
+            { id: 6, destino: "Medellín", destinatario: "Laura Sánchez", fecha: "2023-09-05", emprendedor: "Emprendedor 2", entregado: true, registro: "#" },
+            { id: 7, destino: "Medellín", destinatario: "Jorge Díaz", fecha: "2023-09-04", emprendedor: "Emprendedor 1", entregado: true, registro: "#" },
+            { id: 8, destino: "Barranquilla", destinatario: "Sofía Ramírez", fecha: "2023-09-04", emprendedor: "Emprendedor 3", entregado: true, registro: "#" },
+            { id: 9, destino: "Cartagena", destinatario: "Diego González", fecha: "2023-09-03", emprendedor: "Emprendedor 2", entregado: true, registro: "#" },
+            { id: 10, destino: "Cali", destinatario: "Mónica Herrera", fecha: "2023-09-03", emprendedor: "Emprendedor 1", entregado: true, registro: "#" }
+        ];
+
+        // Función para formatear fecha
+        function formatDate(dateString) {
+            const options = { day: 'numeric', month: 'short', year: 'numeric' };
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', options);
+        }
+
+        // Función para renderizar las tarjetas de destino
+        function renderDestinationCards(data) {
+            const container = document.getElementById('destinationCards');
+            container.innerHTML = '';
+            
+            // Agrupar por destino
+            const groupedByDestination = {};
+            data.forEach(delivery => {
+                if (!groupedByDestination[delivery.destino]) {
+                    groupedByDestination[delivery.destino] = [];
+                }
+                groupedByDestination[delivery.destino].push(delivery);
+            });
+            
+            // Crear tarjetas para cada destino
+            for (const destination in groupedByDestination) {
+                const deliveries = groupedByDestination[destination];
+                const destinatarios = deliveries.map(d => d.destinatario);
+                const firstDelivery = deliveries[0];
+                
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-3';
+                card.innerHTML = `
+                    <div class="card destination-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">${destination}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Destinatarios:</h6>
+                            <div class="destinatario-list mb-2">
+                                ${destinatarios.map(dest => `<span class="badge bg-light text-dark me-1 mb-1">${dest}</span>`).join('')}
+                            </div>
+                            <p class="card-text"><strong>Fecha:</strong> ${formatDate(firstDelivery.fecha)}</p>
+                            <p class="card-text"><strong>Total entregas:</strong> ${deliveries.length}</p>
+                            <a href="#" class="btn btn-sm btn-primary">Ver registros</a>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+
+        // Función para renderizar la tabla de entregas
+        function renderDeliveryTable(data) {
+            const tableBody = document.getElementById('deliveryTable');
+            tableBody.innerHTML = '';
+            
+            data.forEach(delivery => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${delivery.destino}</td>
+                    <td>${delivery.destinatario}</td>
+                    <td>${formatDate(delivery.fecha)}</td>
+                    <td>${delivery.emprendedor}</td>
+                    <td><span class="badge badge-delivered">Entregado</span></td>
+                    <td>
+                        <a href="${delivery.registro}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye"></i> Ver registro
+                        </a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Inicializar gráfico
+        function initChart() {
+            const ctx = document.getElementById('deliveryChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Cali', 'Bogotá', 'Medellín', 'Barranquilla', 'Cartagena'],
+                    datasets: [{
+                        label: 'Entregas por destino',
+                        data: [42, 35, 28, 15, 8],
+                        backgroundColor: [
+                            'rgba(52, 152, 219, 0.7)',
+                            'rgba(46, 204, 113, 0.7)',
+                            'rgba(155, 89, 182, 0.7)',
+                            'rgba(241, 196, 15, 0.7)',
+                            'rgba(230, 126, 34, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(52, 152, 219, 1)',
+                            'rgba(46, 204, 113, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(241, 196, 15, 1)',
+                            'rgba(230, 126, 34, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Filtrar datos
+        function filterData() {
+            const emprendedorFilter = document.getElementById('emprendedorFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            let filteredData = deliveriesData.filter(delivery => delivery.entregado === true);
+            
+            if (emprendedorFilter !== 'all') {
+                filteredData = filteredData.filter(delivery => delivery.emprendedor === `Emprendedor ${emprendedorFilter}`);
+            }
+            
+            if (dateFilter) {
+                filteredData = filteredData.filter(delivery => delivery.fecha === dateFilter);
+            }
+            
+            renderDestinationCards(filteredData);
+            renderDeliveryTable(filteredData);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            initChart();
+            renderDestinationCards(deliveriesData);
+            renderDeliveryTable(deliveriesData);
+            
+            document.getElementById('applyFilter').addEventListener('click', filterData);
+        });
+    </script>
+</body>
+</html>
