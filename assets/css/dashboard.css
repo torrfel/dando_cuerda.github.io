@@ -1,0 +1,98 @@
+:root {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --success-color: #27ae60;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.navbar {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border: none;
+}
+
+.card-header {
+    background: linear-gradient(135deg, var(--primary-color), #5dade2);
+    color: white;
+    border-radius: 10px 10px 0 0 !important;
+}
+
+.stats-card {
+    text-align: center;
+    padding: 15px;
+    color: white;
+    border-radius: 10px;
+}
+
+.stats-card i {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.stats-card.primary {
+    background: linear-gradient(135deg, var(--primary-color), #5dade2);
+}
+
+.stats-card.success {
+    background: linear-gradient(135deg, var(--success-color), #2ecc71);
+}
+
+.stats-card.warning {
+    background: linear-gradient(135deg, #f39c12, #f1c40f);
+}
+
+.destination-card {
+    transition: transform 0.3s;
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+}
+
+.badge-delivered {
+    background-color: var(--success-color);
+}
+
+.filter-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+}
+
+.btn-filter {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-filter:hover {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.destinatario-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.1);
+}
