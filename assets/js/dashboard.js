@@ -20,6 +20,7 @@ function formatDate(dateString) {
 }
 
 // Función para renderizar las tarjetas de destino
+
 function renderDestinationCards(data) {
     const container = document.getElementById('destinationCards');
     container.innerHTML = '';
@@ -89,10 +90,10 @@ function initChart() {
     const chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Cali', 'Bogotá', 'Medellín', 'Barranquilla', 'Cartagena'],
+            labels: ['Cali','Bogotá','Medellín','Barranquilla','Cartagena','Bucaramanga','Santa Marta','Manizales','Pereira','Armenia','Cúcuta','Ibagué'],
             datasets: [{
                 label: 'Entregas por destino',
-                data: [42, 35, 28, 15, 8],
+                data: [42, 35, 28, 15, 8, 20, 12, 18, 25, 10, 14, 22],
                 backgroundColor: [
                     'rgba(52, 152, 219, 0.7)',
                     'rgba(46, 204, 113, 0.7)',
