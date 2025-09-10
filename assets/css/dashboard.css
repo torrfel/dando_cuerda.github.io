@@ -12,14 +12,11 @@ body {
     color: #333;
 }
 
-.navbar {
-    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-}
 
 .card {
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
+    margin-bottom: 1px;
     margin-top: 20px;
     border: none;
 }
@@ -54,16 +51,13 @@ body {
     background: linear-gradient(135deg, #f39c12, #f1c40f);
 }
 
-.destination-card {
-    transition: transform 0.3s;
-}
 
-.destination-card:hover {
-    transform: translateY(-5px);
-}
-
-.badge-delivered {
+.badge-entregado {
     background-color: var(--success-color);
+}
+
+.badge-pendiente {
+    background-color: var(--accent-color);
 }
 
 .filter-section {
