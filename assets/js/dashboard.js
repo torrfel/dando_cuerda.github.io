@@ -184,7 +184,6 @@ function filterData() {
     }
 
     // Renderizar
-    renderDestinationCards(filteredData);
     renderDeliveryTable(filteredData);
 }
 
