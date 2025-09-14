@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador de Envíos Avanzado</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .result-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #f9fafc;
+            border-radius: 8px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4a6491;
+            box-shadow: 0 0 0 2px rgba(74, 100, 145, 0.2);
+        }
+        
+        .dimensions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .dimensions .form-group {
+            flex: 1;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #2c3e50, #4a6491);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+        
+        .result-box {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+        
+        .result-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .result-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 15px 0;
+        }
+        
+        .result-details {
+            text-align: left;
+            margin-top: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            color: #7f8c8d;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+        }
+        
+        .volume-display {
+            background-color: #e8f4fc;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .package-type {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .package-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .package-option.selected {
+            border-color: #4a6491;
+            background-color: #f0f4f9;
+        }
+        
+        .package-option i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4a6491;
+        }
+        
+        .package-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .package-item {
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .package-info {
+            flex: 1;
+        }
+        
+        .package-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: #4a6491;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .action-btn.delete {
+            color: #e74c3c;
+        }
+        
+        .contact-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .contact-option {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .contact-option.selected {
+            border-color: #4a6491;
+            background-color: #f0f4f9;
+        }
+        
+        .contact-option i {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #4a6491;
+        }
+        
+        .contact-form {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .dimensions, .package-type, .contact-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cotizador de Envíos Avanzado</h1>
+            <p class="subtitle">Calcula el costo de tu envío con múltiples paquetes y opciones de entrega</p>
+        </header>
+        
+        <div class="content">
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="origen">Ciudad de Origen</label>
+                    <select id="origen">
+                        <option value="">Seleccione una ciudad</option>
+                        <option value="bogota">Bogotá</option>
+                        <option value="medellin">Medellín</option>
+                        <option value="cali">Cali</option>
+                        <option value="barranquilla">Barranquilla</option>
+                        <option value="cartagena">Cartagena</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destino">Ciudad de Destino</label>
+                    <select id="destino">
+                        <option value="">Seleccione una ciudad</option>
+                        <option value="bogota">Bogotá</option>
+                        <option value="medellin">Medellín</option>
+                        <option value="cali">Cali</option>
+                        <option value="barranquilla">Barranquilla</option>
+                        <option value="cartagena">Cartagena</option>
+                    </select>
+                </div>
+                
+                <h3>Tipo de envío</h3>
+                <div class="package-type">
+                    <div class="package-option selected" id="single-package">
+                        <i class="fas fa-box"></i>
+                        <div>Un solo paquete</div>
+                    </div>
+                    <div class="package-option" id="multiple-packages">
+                        <i class="fas fa-boxes"></i>
+                        <div>Múltiples paquetes</div>
+                    </div>
+                </div>
+                
+                <div id="single-package-form">
+                    <h3>Dimensiones del paquete (cm)</h3>
+                    <div class="dimensions">
+                        <div class="form-group">
+                            <label for="alto">Alto</label>
+                            <input type="number" id="alto" min="1" placeholder="Ej: 20">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ancho">Ancho</label>
+                            <input type="number" id="ancho" min="1" placeholder="Ej: 30">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="largo">Largo</label>
+                            <input type="number" id="largo" min="1" placeholder="Ej: 40">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="peso">Peso (kg)</label>
+                        <input type="number" id="peso" min="0.1" step="0.1" placeholder="Ej: 2.5">
+                    </div>
+                    
+                    <div id="volumen" class="volume-display">
+                        Volumen: 0 cm³
+                    </div>
+                </div>
+                
+                <div id="multiple-packages-form" class="hidden">
+                    <div class="form-group">
+                        <label for="package-count">Número de paquetes</label>
+                        <input type="number" id="package-count" min="2" value="2" placeholder="Cantidad de paquetes">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>¿Todos los paquetes tienen las mismas medidas?</label>
+                        <div style="display: flex; gap: 15px; margin-top: 10px;">
+                            <label style="display: inline-flex; align-items: center;">
+                                <input type="radio" name="same-measures" value="yes" checked> Sí
+                            </label>
+                            <label style="display: inline-flex; align-items: center;">
+                                <input type="radio" name="same-measures" value="no"> No
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div id="same-measures-form">
+                        <h3>Dimensiones de los paquetes (cm)</h3>
+                        <div class="dimensions">
+                            <div class="form-group">
+                                <label for="m-alto">Alto</label>
+                                <input type="number" id="m-alto" min="1" placeholder="Ej: 20">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-ancho">Ancho</label>
+                                <input type="number" id="m-ancho" min="1" placeholder="Ej: 30">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="m-largo">Largo</label>
+                                <input type="number" id="m-largo" min="1" placeholder="Ej: 40">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="m-peso">Peso por paquete (kg)</label>
+                            <input type="number" id="m-peso" min="0.1" step="0.1" placeholder="Ej: 2.5">
+                        </div>
+                    </div>
+                    
+                    <div id="different-measures-form" class="hidden">
+                        <h3>Agregar paquete</h3>
+                        <div class="dimensions">
+                            <div class="form-group">
+                                <label for="d-alto">Alto (cm)</label>
+                                <input type="number" id="d-alto" min="1" placeholder="Ej: 20">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="d-ancho">Ancho (cm)</label>
+                                <input type="number" id="d-ancho" min="1" placeholder="Ej: 30">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="d-largo">Largo (cm)</label>
+                                <input type="number" id="d-largo" min="1" placeholder="Ej: 40">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="d-peso">Peso (kg)</label>
+                            <input type="number" id="d-peso" min="0.1" step="0.1" placeholder="Ej: 2.5">
+                        </div>
+                        
+                        <button class="btn btn-secondary" id="add-package">
+                            <i class="fas fa-plus"></i> Agregar paquete
+                        </button>
+                        
+                        <div class="package-list" id="packages-list">
+                            <!-- Los paquetes se agregarán aquí dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Opciones de envío</h3>
+                <div class="contact-options">
+                    <div class="contact-option selected" id="immediate-option">
+                        <i class="fas fa-bolt"></i>
+                        <div>Envío inmediato</div>
+                    </div>
+                    <div class="contact-option" id="agent-option">
+                        <i class="fas fa-headset"></i>
+                        <div>Contactar agente</div>
+                    </div>
+                </div>
+                
+                <div id="contact-form" class="contact-form hidden">
+                    <div class="form-group">
+                        <label for="name">Nombre completo</label>
+                        <input type="text" id="name" placeholder="Ingrese su nombre">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Correo electrónico</label>
+                        <input type="email" id="email" placeholder="Ingrese su email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Teléfono</label>
+                        <input type="tel" id="phone" placeholder="Ingrese su teléfono">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Mensaje adicional</label>
+                        <textarea id="message" rows="3" placeholder="Detalles adicionales para el agente"></textarea>
+                    </div>
+                </div>
+                
+                <button class="btn" id="calcular">
+                    <i class="fas fa-calculator"></i> Calcular Cotización
+                </button>
+                
+                <button class="btn btn-success" id="solicitar">
+                    <i class="fas fa-paper-plane"></i> Solicitar Envío
+                </button>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-box">
+                    <div class="result-title">Costo estimado de envío</div>
+                    <div class="result-value" id="costo">$0.00</div>
+                    <div class="result-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Distancia:</span>
+                            <span class="detail-value" id="distancia">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Tarifa por km:</span>
+                            <span class="detail-value" id="tarifa">$0.00</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Volumen total:</span>
+                            <span class="detail-value" id="volumen-result">0 cm³</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Peso total:</span>
+                            <span class="detail-value" id="peso-result">0 kg</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Número de paquetes:</span>
+                            <span class="detail-value" id="package-count-result">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Tipo de envío:</span>
+                            <span class="detail-value" id="shipping-type">Inmediato</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Tiempo estimado:</span>
+                            <span class="detail-value" id="tiempo">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info">
+                    <h3>¿Cómo funciona?</h3>
+                    <p>El costo de envío se calcula en base a:</p>
+                    <ul>
+                        <li>La distancia entre ciudades</li>
+                        <li>El volumen total de tus paquetes</li>
+                        <li>El peso total del envío</li>
+                        <li>El número de paquetes</li>
+                        <li>La modalidad de envío seleccionada</li>
+                    </ul>
+                    <p>Los envíos más grandes y pesados tienen un costo mayor. Las tarifas por kilómetro varían según la distancia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const origenSelect = document.getElementById('origen');
+            const destinoSelect = document.getElementById('destino');
+            const altoInput = document.getElementById('alto');
+            const anchoInput = document.getElementById('ancho');
+            const largoInput = document.getElementById('largo');
+            const pesoInput = document.getElementById('peso');
+            const calcularBtn = document.getElementById('calcular');
+            const solicitarBtn = document.getElementById('solicitar');
+            const volumenDisplay = document.getElementById('volumen');
+            const costoDisplay = document.getElementById('costo');
+            const distanciaDisplay = document.getElementById('distancia');
+            const tarifaDisplay = document.getElementById('tarifa');
+            const volumenResultDisplay = document.getElementById('volumen-result');
+            const pesoResultDisplay = document.getElementById('peso-result');
+            const tiempoDisplay = document.getElementById('tiempo');
+            const packageCountResult = document.getElementById('package-count-result');
+            const shippingTypeDisplay = document.getElementById('shipping-type');
+            
+            // Opciones de paquetes
+            const singlePackageOption = document.getElementById('single-package');
+            const multiplePackagesOption = document.getElementById('multiple-packages');
+            const singlePackageForm = document.getElementById('single-package-form');
+            const multiplePackagesForm = document.getElementById('multiple-packages-form');
+            
+            // Opciones de medidas múltiples
+            const sameMeasuresRadio = document.querySelector('input[name="same-measures"][value="yes"]');
+            const differentMeasuresRadio = document.querySelector('input[name="same-measures"][value="no"]');
+            const sameMeasuresForm = document.getElementById('same-measures-form');
+            const differentMeasuresForm = document.getElementById('different-measures-form');
+            
+            // Opciones de contacto
+            const immediateOption = document.getElementById('immediate-option');
+            const agentOption = document.getElementById('agent-option');
+            const contactForm = document.getElementById('contact-form');
+            
+            // Para múltiples paquetes con medidas diferentes
+            const addPackageBtn = document.getElementById('add-package');
+            const packagesList = document.getElementById('packages-list');
+            
+            // Datos de la aplicación
+            let packages = [];
+            let isImmediateShipping = true;
+            
+            // Datos de distancias entre ciudades (en km)
+            const distancias = {
+                bogota: {
+                    medellin: 415,
+                    cali: 464,
+                    barranquilla: 1055,
+                    cartagena: 1049,
+                    bogota: 0
+                },
+                medellin: {
+                    bogota: 415,
+                    cali: 523,
+                    barranquilla: 847,
+                    cartagena: 841,
+                    medellin: 0
+                },
+                cali: {
+                    bogota: 464,
+                    medellin: 523,
+                    barranquilla: 1195,
+                    cartagena: 1189,
+                    cali: 0
+                },
+                barranquilla: {
+                    bogota: 1055,
+                    medellin: 847,
+                    cali: 1195,
+                    cartagena: 126,
+                    barranquilla: 0
+                },
+                cartagena: {
+                    bogota: 1049,
+                    medellin: 841,
+                    cali: 1189,
+                    barranquilla: 126,
+                    cartagena: 0
+                }
+            };
+            
+            // Inicialización de eventos
+            function initEvents() {
+                // Eventos para tipo de paquete
+                singlePackageOption.addEventListener('click', () => selectPackageType('single'));
+                multiplePackagesOption.addEventListener('click', () => selectPackageType('multiple'));
+                
+                // Eventos para medidas
+                sameMeasuresRadio.addEventListener('change', toggleMeasuresForm);
+                differentMeasuresRadio.addEventListener('change', toggleMeasuresForm);
+                
+                // Eventos para opciones de envío
+                immediateOption.addEventListener('click', () => selectShippingOption('immediate'));
+                agentOption.addEventListener('click', () => selectShippingOption('agent'));
+                
+                // Eventos para calcular volumen en tiempo real
+                altoInput.addEventListener('input', updateVolume);
+                anchoInput.addEventListener('input', updateVolume);
+                largoInput.addEventListener('input', updateVolume);
+                
+                // Eventos para botones principales
+                calcularBtn.addEventListener('click', calculateShipping);
+                solicitarBtn.addEventListener('click', requestShipping);
+                
+                // Evento para agregar paquetes
+                addPackageBtn.addEventListener('click', addPackage);
+            }
+            
+            // Seleccionar tipo de paquete
+            function selectPackageType(type) {
+                singlePackageOption.classList.remove('selected');
+                multiplePackagesOption.classList.remove('selected');
+                
+                singlePackageForm.classList.add('hidden');
+                multiplePackagesForm.classList.add('hidden');
+                
+                if (type === 'single') {
+                    singlePackageOption.classList.add('selected');
+                    singlePackageForm.classList.remove('hidden');
+                } else {
+                    multiplePackagesOption.classList.add('selected');
+                    multiplePackagesForm.classList.remove('hidden');
+                    toggleMeasuresForm();
+                }
+            }
+            
+            // Alternar entre formularios de medidas
+            function toggleMeasuresForm() {
+                if (sameMeasuresRadio.checked) {
+                    sameMeasuresForm.classList.remove('hidden');
+                    differentMeasuresForm.classList.add('hidden');
+                } else {
+                    sameMeasuresForm.classList.add('hidden');
+                    differentMeasuresForm.classList.remove('hidden');
+                }
+            }
+            
+            // Seleccionar opción de envío
+            function selectShippingOption(type) {
+                immediateOption.classList.remove('selected');
+                agentOption.classList.remove('selected');
+                contactForm.classList.add('hidden');
+                
+                if (type === 'immediate') {
+                    immediateOption.classList.add('selected');
+                    isImmediateShipping = true;
+                    shippingTypeDisplay.textContent = 'Inmediato';
+                } else {
+                    agentOption.classList.add('selected');
+                    contactForm.classList.remove('hidden');
+                    isImmediateShipping = false;
+                    shippingTypeDisplay.textContent = 'Con agente';
+                }
+            }
+            
+            // Actualizar visualización del volumen
+            function updateVolume() {
+                const alto = parseFloat(altoInput.value) || 0;
+                const ancho = parseFloat(anchoInput.value) || 0;
+                const largo = parseFloat(largoInput.value) || 0;
+                
+                const volumen = alto * ancho * largo;
+                volumenDisplay.textContent = `Volumen: ${volumen.toLocaleString()} cm³`;
+            }
+            
+            // Agregar paquete a la lista
+            function addPackage() {
+                const alto = parseFloat(document.getElementById('d-alto').value) || 0;
+                const ancho = parseFloat(document.getElementById('d-ancho').value) || 0;
+                const largo = parseFloat(document.getElementById('d-largo').value) || 0;
+                const peso = parseFloat(document.getElementById('d-peso').value) || 0;
+                
+                if (alto <= 0 || ancho <= 0 || largo <= 0 || peso <= 0) {
+                    alert('Por favor, ingrese valores válidos para las dimensiones y peso del paquete.');
+                    return;
+                }
+                
+                const volumen = alto * ancho * largo;
+                const package = { alto, ancho, largo, peso, volumen };
+                packages.push(package);
+                
+                renderPackagesList();
+                
+                // Limpiar formulario
+                document.getElementById('d-alto').value = '';
+                document.getElementById('d-ancho').value = '';
+                document.getElementById('d-largo').value = '';
+                document.getElementById('d-peso').value = '';
+            }
+            
+            // Renderizar lista de paquetes
+            function renderPackagesList() {
+                packagesList.innerHTML = '';
+                
+                packages.forEach((pkg, index) => {
+                    const packageElement = document.createElement('div');
+                    packageElement.className = 'package-item';
+                    packageElement.innerHTML = `
+                        <div class="package-info">
+                            <strong>Paquete ${index + 1}</strong>: ${pkg.alto} × ${pkg.ancho} × ${pkg.largo} cm, 
+                            ${pkg.peso} kg, Vol: ${pkg.volumen.toLocaleString()} cm³
+                        </div>
+                        <div class="package-actions">
+                            <button class="action-btn edit" data-index="${index}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" data-index="${index}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    packagesList.appendChild(packageElement);
+                });
+                
+                // Agregar event listeners a los botones de editar y eliminar
+                document.querySelectorAll('.action-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                        editPackage(index);
+                    });
+                });
+                
+                document.querySelectorAll('.action-btn.delete').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.currentTarget.getAttribute('data-index'));
+                        deletePackage(index);
+                    });
+                });
+            }
+            
+            // Editar paquete
+            function editPackage(index) {
+                const pkg = packages[index];
+                
+                document.getElementById('d-alto').value = pkg.alto;
+                document.getElementById('d-ancho').value = pkg.ancho;
+                document.getElementById('d-largo').value = pkg.largo;
+                document.getElementById('d-peso').value = pkg.peso;
+                
+                deletePackage(index);
+            }
+            
+            // Eliminar paquete
+            function deletePackage(index) {
+                packages.splice(index, 1);
+                renderPackagesList();
+            }
+            
+            // Calcular envío
+            function calculateShipping() {
+                const origen = origenSelect.value;
+                const destino = destinoSelect.value;
+                
+                // Validaciones básicas
+                if (!origen || !destino) {
+                    alert('Por favor, seleccione las ciudades de origen y destino.');
+                    return;
+                }
+                
+                if (origen === destino) {
+                    alert('Las ciudades de origen y destino no pueden ser iguales.');
+                    return;
+                }
+                
+                let totalVolumen = 0;
+                let totalPeso = 0;
+                let packageCount = 0;
+                
+                // Obtener datos según el tipo de paquete seleccionado
+                if (singlePackageOption.classList.contains('selected')) {
+                    // Un solo paquete
+                    const alto = parseFloat(altoInput.value) || 0;
+                    const ancho = parseFloat(anchoInput.value) || 0;
+                    const largo = parseFloat(largoInput.value) || 0;
+                    const peso = parseFloat(pesoInput.value) || 0;
+                    
+                    if (alto <= 0 || ancho <= 0 || largo <= 0 || peso <= 0) {
+                        alert('Por favor, ingrese valores válidos para las dimensiones y peso del paquete.');
+                        return;
+                    }
+                    
+                    totalVolumen = alto * ancho * largo;
+                    totalPeso = peso;
+                    packageCount = 1;
+                } else {
+                    // Múltiples paquetes
+                    if (sameMeasuresRadio.checked) {
+                        // Todos con las mismas medidas
+                        const alto = parseFloat(document.getElementById('m-alto').value) || 0;
+                        const ancho = parseFloat(document.getElementById('m-ancho').value) || 0;
+                        const largo = parseFloat(document.getElementById('m-largo').value) || 0;
+                        const peso = parseFloat(document.getElementById('m-peso').value) || 0;
+                        const count = parseInt(document.getElementById('package-count').value) || 0;
+                        
+                        if (alto <= 0 || ancho <= 0 || largo <= 0 || peso <= 0 || count <= 0) {
+                            alert('Por favor, ingrese valores válidos para las dimensiones, peso y cantidad de paquetes.');
+                            return;
+                        }
+                        
+                        totalVolumen = (alto * ancho * largo) * count;
+                        totalPeso = peso * count;
+                        packageCount = count;
+                    } else {
+                        // Medidas diferentes
+                        if (packages.length === 0) {
+                            alert('Por favor, agregue al menos un paquete.');
+                            return;
+                        }
+                        
+                        packages.forEach(pkg => {
+                            totalVolumen += pkg.volumen;
+                            totalPeso += pkg.peso;
+                        });
+                        
+                        packageCount = packages.length;
+                    }
+                }
+                
+                // Obtener distancia
+                const distancia = distancias[origen][destino];
+                
+                // Calcular tarifa base por km (depende de la distancia)
+                let tarifaPorKm;
+                if (distancia < 300) {
+                    tarifaPorKm = 1200;
+                } else if (distancia < 600) {
+                    tarifaPorKm = 950;
+                } else {
+                    tarifaPorKm = 800;
+                }
+                
+                // Calcular costo base por distancia
+                let costo = distancia * tarifaPorKm;
+                
+                // Ajustar por volumen (mayor volumen = mayor costo)
+                const factorVolumen = Math.min(5, 1 + (totalVolumen / 10000)); // Máximo 5x
+                costo *= factorVolumen;
+                
+                // Ajustar por peso (mayor peso = mayor costo)
+                const factorPeso = Math.min(3, 1 + (totalPeso / 10)); // Máximo 3x
+                costo *= factorPeso;
+                
+                // Ajustar por número de paquetes
+                const factorPaquetes = Math.min(2, 1 + (packageCount / 5)); // Máximo 2x
+                costo *= factorPaquetes;
+                
+                // Ajustar por tipo de envío
+                if (!isImmediateShipping) {
+                    costo *= 0.9; // 10% de descuento para envíos con agente
+                }
+                
+                // Calcular tiempo de entrega estimado (en horas)
+                let tiempoEntrega = distancia / 60; // Suponiendo 60 km/h promedio
+                // Añadir tiempo adicional por manipulación (volumen y peso)
+                tiempoEntrega += (totalVolumen / 5000) + (totalPeso / 5);
+                
+                // Formatear tiempo de entrega
+                let tiempoTexto;
+                if (tiempoEntrega < 24) {
+                    tiempoTexto = `${Math.ceil(tiempoEntrega)} horas`;
+                } else {
+                    tiempoTexto = `${Math.ceil(tiempoEntrega / 24)} días`;
+                }
+                
+                // Actualizar la interfaz con los resultados
+                costoDisplay.textContent = `$${Math.round(costo).toLocaleString()}`;
+                distanciaDisplay.textContent = `${distancia} km`;
+                tarifaDisplay.textContent = `$${tarifaPorKm.toLocaleString()}`;
+                volumenResultDisplay.textContent = `${totalVolumen.toLocaleString()} cm³`;
+                pesoResultDisplay.textContent = `${totalPeso} kg`;
+                packageCountResult.textContent = packageCount;
+                tiempoDisplay.textContent = tiempoTexto;
+            }
+            
+            // Solicitar envío
+            function requestShipping() {
+                calculateShipping();
+                
+                if (costoDisplay.textContent === '$0.00') {
+                    alert('Por favor, calcule primero el costo de envío.');
+                    return;
+                }
+                
+                if (!isImmediateShipping) {
+                    // Validar formulario de contacto
+                    const name = document.getElementById('name').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+                    
+                    if (!name || !email || !phone) {
+                        alert('Por favor, complete todos los campos de contacto para que un agente se comunique con usted.');
+                        return;
+                    }
+                    
+                    alert(`¡Solicitud enviada con éxito! Un agente se comunicará con usted pronto al ${phone} o al correo ${email}.`);
+                } else {
+                    alert('¡Solicitud de envío inmediato realizada con éxito! En breve recibirá un correo con los detalles de su envío.');
+                }
+            }
+            
+            // Inicializar la aplicación
+            initEvents();
+            updateVolume();
+        });
+    </script>
+</body>
+</html>
