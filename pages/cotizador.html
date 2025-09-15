@@ -284,12 +284,39 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
+        .service-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .service-option {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .service-option.selected {
+            border-color: #4a6491;
+            background-color: #f0f4f9;
+        }
+        
+        .service-option i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4a6491;
+        }
+        
         .hidden {
             display: none;
         }
         
         @media (max-width: 768px) {
-            .dimensions, .package-type, .contact-options {
+            .dimensions, .package-type, .contact-options, .service-options {
                 flex-direction: column;
                 gap: 10px;
             }
@@ -304,7 +331,7 @@
     <div class="container">
         <header>
             <h1>Cotizador de Envíos Avanzado</h1>
-            <p class="subtitle">Calcula el costo de tu envío con múltiples paquetes y opciones de entrega</p>
+            <p class="subtitle">Calcula el costo de tu envío con múltiples paquetes, seguros y tipos de servicio</p>
         </header>
         
         <div class="content">
@@ -331,6 +358,22 @@
                         <option value="barranquilla">Barranquilla</option>
                         <option value="cartagena">Cartagena</option>
                     </select>
+                </div>
+                
+                <h3>Tipo de servicio</h3>
+                <div class="service-options">
+                    <div class="service-option selected" id="service-private">
+                        <i class="fas fa-truck"></i>
+                        <div>Privado</div>
+                    </div>
+                    <div class="service-option" id="service-collective">
+                        <i class="fas fa-users"></i>
+                        <div>Colectivo</div>
+                    </div>
+                    <div class="service-option" id="service-storage">
+                        <i class="fas fa-warehouse"></i>
+                        <div>Almacenamiento</div>
+                    </div>
                 </div>
                 
                 <h3>Tipo de envío</h3>
@@ -451,6 +494,16 @@
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <label for="declared-value">Valor declarado del envío ($)</label>
+                    <input type="number" id="declared-value" min="0" placeholder="Valor de los productos">
+                </div>
+                
+                <div class="form-group">
+                    <label for="insurance">Seguro (2% del valor declarado)</label>
+                    <input type="text" id="insurance" readonly placeholder="Se calculará automáticamente">
+                </div>
+                
                 <h3>Opciones de envío</h3>
                 <div class="contact-options">
                     <div class="contact-option selected" id="immediate-option">
@@ -504,7 +557,7 @@
                             <span class="detail-value" id="distancia">-</span>
                         </div>
                         <div class="detail-item">
-                            <span class="detail-label">Tarifa por cm³:</span>
+                            <span class="detail-label">Tarifa por km:</span>
                             <span class="detail-value" id="tarifa">$0.00</span>
                         </div>
                         <div class="detail-item">
@@ -518,6 +571,18 @@
                         <div class="detail-item">
                             <span class="detail-label">Número de paquetes:</span>
                             <span class="detail-value" id="package-count-result">0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Tipo de servicio:</span>
+                            <span class="detail-value" id="service-type">Privado</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Valor declarado:</span>
+                            <span class="detail-value" id="declared-value-result">$0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Costo de seguro:</span>
+                            <span class="detail-value" id="insurance-result">$0</span>
                         </div>
                         <div class="detail-item">
                             <span class="detail-label">Tipo de envío:</span>
@@ -538,6 +603,8 @@
                         <li>El volumen total de tus paquetes</li>
                         <li>El peso total del envío</li>
                         <li>El número de paquetes</li>
+                        <li>El tipo de servicio seleccionado</li>
+                        <li>El valor declarado del envío (seguro del 2%)</li>
                         <li>La modalidad de envío seleccionada</li>
                     </ul>
                     <p>Los envíos más grandes y pesados tienen un costo mayor. Las tarifas por kilómetro varían según la distancia.</p>
@@ -555,6 +622,8 @@
             const anchoInput = document.getElementById('ancho');
             const largoInput = document.getElementById('largo');
             const pesoInput = document.getElementById('peso');
+            const declaredValueInput = document.getElementById('declared-value');
+            const insuranceInput = document.getElementById('insurance');
             const calcularBtn = document.getElementById('calcular');
             const solicitarBtn = document.getElementById('solicitar');
             const volumenDisplay = document.getElementById('volumen');
@@ -566,12 +635,20 @@
             const tiempoDisplay = document.getElementById('tiempo');
             const packageCountResult = document.getElementById('package-count-result');
             const shippingTypeDisplay = document.getElementById('shipping-type');
+            const serviceTypeDisplay = document.getElementById('service-type');
+            const declaredValueResult = document.getElementById('declared-value-result');
+            const insuranceResult = document.getElementById('insurance-result');
             
             // Opciones de paquetes
             const singlePackageOption = document.getElementById('single-package');
             const multiplePackagesOption = document.getElementById('multiple-packages');
             const singlePackageForm = document.getElementById('single-package-form');
             const multiplePackagesForm = document.getElementById('multiple-packages-form');
+            
+            // Opciones de servicio
+            const servicePrivateOption = document.getElementById('service-private');
+            const serviceCollectiveOption = document.getElementById('service-collective');
+            const serviceStorageOption = document.getElementById('service-storage');
             
             // Opciones de medidas múltiples
             const sameMeasuresRadio = document.querySelector('input[name="same-measures"][value="yes"]');
@@ -591,6 +668,7 @@
             // Datos de la aplicación
             let packages = [];
             let isImmediateShipping = true;
+            let serviceType = 'private'; // private, collective, storage
             
             // Datos de distancias entre ciudades (en km)
             const distancias = {
@@ -637,6 +715,11 @@
                 singlePackageOption.addEventListener('click', () => selectPackageType('single'));
                 multiplePackagesOption.addEventListener('click', () => selectPackageType('multiple'));
                 
+                // Eventos para tipo de servicio
+                servicePrivateOption.addEventListener('click', () => selectServiceType('private'));
+                serviceCollectiveOption.addEventListener('click', () => selectServiceType('collective'));
+                serviceStorageOption.addEventListener('click', () => selectServiceType('storage'));
+                
                 // Eventos para medidas
                 sameMeasuresRadio.addEventListener('change', toggleMeasuresForm);
                 differentMeasuresRadio.addEventListener('change', toggleMeasuresForm);
@@ -650,12 +733,35 @@
                 anchoInput.addEventListener('input', updateVolume);
                 largoInput.addEventListener('input', updateVolume);
                 
+                // Evento para calcular seguro en tiempo real
+                declaredValueInput.addEventListener('input', calculateInsurance);
+                
                 // Eventos para botones principales
                 calcularBtn.addEventListener('click', calculateShipping);
                 solicitarBtn.addEventListener('click', requestShipping);
                 
                 // Evento para agregar paquetes
                 addPackageBtn.addEventListener('click', addPackage);
+            }
+            
+            // Seleccionar tipo de servicio
+            function selectServiceType(type) {
+                servicePrivateOption.classList.remove('selected');
+                serviceCollectiveOption.classList.remove('selected');
+                serviceStorageOption.classList.remove('selected');
+                
+                serviceType = type;
+                
+                if (type === 'private') {
+                    servicePrivateOption.classList.add('selected');
+                    serviceTypeDisplay.textContent = 'Privado';
+                } else if (type === 'collective') {
+                    serviceCollectiveOption.classList.add('selected');
+                    serviceTypeDisplay.textContent = 'Colectivo';
+                } else {
+                    serviceStorageOption.classList.add('selected');
+                    serviceTypeDisplay.textContent = 'Almacenamiento';
+                }
             }
             
             // Seleccionar tipo de paquete
@@ -690,7 +796,7 @@
             // Seleccionar opción de envío
             function selectShippingOption(type) {
                 immediateOption.classList.remove('selected');
-                agentOption.classList.remove('selected');
+                agentOption.classList.remove('hidden');
                 contactForm.classList.add('hidden');
                 
                 if (type === 'immediate') {
@@ -703,6 +809,14 @@
                     isImmediateShipping = false;
                     shippingTypeDisplay.textContent = 'Con agente';
                 }
+            }
+            
+            // Calcular seguro (2% del valor declarado)
+            function calculateInsurance() {
+                const declaredValue = parseFloat(declaredValueInput.value) || 0;
+                const insurance = declaredValue * 0.02;
+                
+                insuranceInput.value = `$${insurance.toLocaleString()}`;
             }
             
             // Actualizar visualización del volumen
@@ -802,6 +916,8 @@
             function calculateShipping() {
                 const origen = origenSelect.value;
                 const destino = destinoSelect.value;
+                const declaredValue = parseFloat(declaredValueInput.value) || 0;
+                const insurance = declaredValue * 0.02;
                 
                 // Validaciones básicas
                 if (!origen || !destino) {
@@ -896,19 +1012,38 @@
                 const factorPaquetes = Math.min(2, 1 + (packageCount / 5)); // Máximo 2x
                 costo *= factorPaquetes;
                 
+                // Ajustar por tipo de servicio
+                if (serviceType === 'collective') {
+                    costo *= 0.7; // 30% de descuento para servicio colectivo
+                } else if (serviceType === 'storage') {
+                    costo *= 1.5; // 50% adicional para almacenamiento
+                }
+                
                 // Ajustar por tipo de envío
                 if (!isImmediateShipping) {
                     costo *= 0.9; // 10% de descuento para envíos con agente
                 }
+                
+                // Agregar seguro al costo total
+                costo += insurance;
                 
                 // Calcular tiempo de entrega estimado (en horas)
                 let tiempoEntrega = distancia / 60; // Suponiendo 60 km/h promedio
                 // Añadir tiempo adicional por manipulación (volumen y peso)
                 tiempoEntrega += (totalVolumen / 5000) + (totalPeso / 5);
                 
+                // Ajustar tiempo según tipo de servicio
+                if (serviceType === 'collective') {
+                    tiempoEntrega *= 1.5; // 50% más de tiempo para servicio colectivo
+                } else if (serviceType === 'storage') {
+                    tiempoEntrega = 0; // Tiempo inmediato para almacenamiento
+                }
+                
                 // Formatear tiempo de entrega
                 let tiempoTexto;
-                if (tiempoEntrega < 24) {
+                if (tiempoEntrega === 0) {
+                    tiempoTexto = "Inmediato";
+                } else if (tiempoEntrega < 24) {
                     tiempoTexto = `${Math.ceil(tiempoEntrega)} horas`;
                 } else {
                     tiempoTexto = `${Math.ceil(tiempoEntrega / 24)} días`;
@@ -921,6 +1056,8 @@
                 volumenResultDisplay.textContent = `${totalVolumen.toLocaleString()} cm³`;
                 pesoResultDisplay.textContent = `${totalPeso} kg`;
                 packageCountResult.textContent = packageCount;
+                declaredValueResult.textContent = `$${declaredValue.toLocaleString()}`;
+                insuranceResult.textContent = `$${insurance.toLocaleString()}`;
                 tiempoDisplay.textContent = tiempoTexto;
             }
             
